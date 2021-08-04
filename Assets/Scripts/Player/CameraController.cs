@@ -30,7 +30,7 @@ namespace Player
 		private float _originalPositionY;
 		private float _bobTimer;
 		
-		private bool _isCursorLocked = true;
+		private bool _isCursorLocked;
 
 		private void Awake()
 		{
@@ -40,8 +40,15 @@ namespace Player
 			_originalPositionY = viewCamera.transform.localPosition.y;
 		}
 
+		private void Start()
+		{
+			_isCursorLocked = lockCursor;
+		}
+
 		private void Update()
 		{
+			UpdateCursorLock();
+
 			if (!IsCursorLocked())
 			{
 				return;
@@ -64,8 +71,6 @@ namespace Player
 
 			transform.localRotation = characterRotation;
 			viewCamera.transform.localRotation = cameraRotation;
-			
-			UpdateCursorLock();
 		}
 		
 		private Quaternion ClampRotationAroundXAxis(Quaternion q)
@@ -145,7 +150,7 @@ namespace Player
 			{
 				_isCursorLocked = true;
 			}
-
+			
 			switch (_isCursorLocked)
 			{
 				case true:

@@ -86,5 +86,15 @@ namespace Player
 			_playerVelocity.y += gravityValue * Time.deltaTime;
 			_characterController.Move(_playerVelocity * Time.deltaTime);
 		}
+
+		public bool IsGrounded()
+		{
+			return _characterController.isGrounded;
+		}
+
+		public bool IsCursorLocked()
+		{
+			return _cameraController.IsCursorLocked();
+		}
 	}
 }
