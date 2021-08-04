@@ -2,58 +2,56 @@ using UnityEngine;
 
 namespace Player
 {
-	public class InputController : MonoBehaviour
+	public static class InputController
 	{
-		private PlayerControls _controls;
+		public static Vector2 GetPlayerMovement()
+		{
+			var horizontal = Input.GetAxis("Horizontal");
+			var vertical = Input.GetAxis("Vertical");
+			
+			var movement = new Vector2(horizontal, vertical);
 
-		protected void Awake()
-		{
-			_controls = new PlayerControls();
-		}
-		
-		private void OnEnable()
-		{
-			_controls.Enable();
-		}
-
-		private void OnDisable()
-		{
-			_controls.Disable();
+			if (movement.sqrMagnitude > 1)
+			{
+				movement.Normalize();
+			}
+			
+			return movement;
 		}
 
-		public Vector2 GetPlayerMovement()
+		public static Vector2 GetMouseDelta()
 		{
-			return _controls.Player.Movement.ReadValue<Vector2>();
+			return new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
 		}
 
-		public Vector2 GetMouseDelta()
+		public static bool IsCrouchHeld()
 		{
-			return _controls.Player.Look.ReadValue<Vector2>();
+			return Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
 		}
 
-		public bool IsCrouching()
+		public static bool IsSprintHeld()
 		{
-			return _controls.Player.Crouch.ReadValue<float>() > 0;
+			return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 		}
 
-		public bool IsSprinting()
+		public static bool IsJumpPressed()
 		{
-			return _controls.Player.Sprint.ReadValue<float>() > 0;
+			return Input.GetKeyDown(KeyCode.Space);
 		}
 
-		public bool JumpTriggered()
+		public static bool IsShootHeld()
 		{
-			return _controls.Player.Jump.triggered;
+			return Input.GetKey(KeyCode.Mouse0);
 		}
 
-		public bool LockCursor()
+		public static bool IsShootPressed()
 		{
-			return _controls.Player.LockCursor.triggered;
+			return Input.GetKeyDown(KeyCode.Mouse0);
 		}
 
-		public bool UnlockCursor()
+		public static bool IsReloadPressed()
 		{
-			return _controls.Player.UnlockCursor.triggered;
+			return Input.GetKeyDown(KeyCode.R);
 		}
 	}
 }

@@ -9,7 +9,6 @@ namespace Player
 
 		private FirstPersonController _firstPersonController;
 		private CharacterController _characterController;
-		private InputController _inputController;
 
 		private bool _isCrouching;
 		private bool _isUncrouching;
@@ -27,13 +26,11 @@ namespace Player
 			_standingHeight = _characterController.height;
 			_crouchingHeight = _standingHeight * crouchHeightFactor;
 			_targetHeight = _standingHeight;
-			
-			_inputController = GetComponent<InputController>();
 		}
 
 		private void Update()
 		{
-			if (_inputController.IsCrouching())
+			if (InputController.IsCrouchHeld())
 			{
 				_isCrouching = true;
 				_targetHeight = _crouchingHeight;

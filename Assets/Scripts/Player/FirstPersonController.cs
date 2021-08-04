@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Player
 {
-	[RequireComponent(typeof (CharacterController), typeof (InputController), typeof (CameraController))]
+	[RequireComponent(typeof (CharacterController), typeof (CameraController))]
 	public class FirstPersonController : MonoBehaviour
 	{
 		[SerializeField] private float crouchingSpeed = 1f;
@@ -12,7 +12,6 @@ namespace Player
 		[SerializeField] private float gravityValue = -9.81f;
 		
 		private CharacterController _characterController;
-		private InputController _inputController;
 		private CameraController _cameraController;
 
 		private Vector3 _playerVelocity;
@@ -25,7 +24,6 @@ namespace Player
 		private void Awake()
 		{
 			_characterController = GetComponent<CharacterController>();
-			_inputController = GetComponent<InputController>();
 			_cameraController = GetComponent<CameraController>();
 
 			_previouslyGrounded = true;
@@ -33,18 +31,13 @@ namespace Player
 
 		private void Update()
 		{
-			IsSprinting = _inputController.IsSprinting();
+			IsSprinting = InputController.IsSprintHeld();
 
 			HandleMovement();
 		}
 
 		private void HandleMovement()
 		{
-			if (!_cameraController.IsCursorLocked())
-			{
-				return;
-			}
-
 			var isGrounded = _characterController.isGrounded;
 			
 			if (isGrounded && _playerVelocity.y < 0)
@@ -57,7 +50,7 @@ namespace Player
 			}
 			_previouslyGrounded = isGrounded;
 
-			var movementInput = _inputController.GetPlayerMovement();
+			var movementInput = InputController.GetPlayerMovement();
 			var movement = transform.forward * movementInput.y + transform.right * movementInput.x;
 
 			var speed = walkingSpeed;
@@ -77,7 +70,7 @@ namespace Player
 			_characterController.Move(movement * Time.deltaTime);
 			_cameraController.UpdateCameraOnMovement(movement);
 
-			if (_inputController.JumpTriggered() && isGrounded)
+			if (InputController.IsJumpPressed() && isGrounded)
 			{
 				_playerVelocity.y += Mathf.Sqrt(jumpHeight * -2.0f * gravityValue);
 				IsJumping = true;
@@ -90,11 +83,6 @@ namespace Player
 		public bool IsGrounded()
 		{
 			return _characterController.isGrounded;
-		}
-
-		public bool IsCursorLocked()
-		{
-			return _cameraController.IsCursorLocked();
 		}
 	}
 }

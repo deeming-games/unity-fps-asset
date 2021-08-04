@@ -5,12 +5,15 @@ namespace Weapon
 {
 	public class WeaponMovement : MonoBehaviour
 	{
-		[SerializeField] private InputController inputController;
 		[SerializeField] private FirstPersonController firstPersonController;
 
-		[SerializeField] private float swayAmount = 0.01f;
-		[SerializeField] private float swayMaxAmount = 0.02f;
-		[SerializeField] private float swaySmoothAmount = 2f;
+		[SerializeField] private float swayMoveAmount = 0.1f;
+		[SerializeField] private float swayMoveMaxAmount = 0.25f;
+		[SerializeField] private float swayMoveSmoothAmount = 5f;
+		
+		[SerializeField] private float swayRotationAmount = 4f;
+		[SerializeField] private float swayRotationMaxAmount = 5f;
+		[SerializeField] private float swayRotationSmoothAmount = 12f;
 		
 		[SerializeField] private float forwardBobSpeed = 10.0f;
 		[SerializeField] private float forwardBobMaxAmount = 0.05f;
@@ -21,10 +24,12 @@ namespace Weapon
 		private float _timer;
 
 		private Vector3 _initialPosition;
+		private Quaternion _initialRotation;
 		
 		private void Awake()
 		{
 			_initialPosition = transform.localPosition;
+			_initialRotation = transform.localRotation;
 		}
 
 		private void Update()
@@ -35,30 +40,30 @@ namespace Weapon
 
 		private void HandleCameraSway()
 		{
-			if (!firstPersonController.IsCursorLocked())
-			{
-				return;
-			}
-
-			var movement = inputController.GetMouseDelta();
-			var movementX = Mathf.Clamp(-movement.x * swayAmount, -swayMaxAmount, swayMaxAmount);
-			var movementY = Mathf.Clamp(-movement.y * swayAmount, -swayMaxAmount, swayMaxAmount);
+			var mouseMovement = InputController.GetMouseDelta();
+			var movementX = Mathf.Clamp(-mouseMovement.x * swayMoveAmount, -swayMoveMaxAmount, swayMoveMaxAmount);
+			var movementY = Mathf.Clamp(-mouseMovement.y * swayMoveAmount, -swayMoveMaxAmount, swayMoveMaxAmount);
 
 			var finalPosition = new Vector3(movementX, movementY, 0f);
-			transform.localPosition = Vector3.Lerp(transform.localPosition, finalPosition + _initialPosition, Time.deltaTime * swaySmoothAmount);
+			transform.localPosition = Vector3.Lerp(transform.localPosition, finalPosition + _initialPosition, Time.deltaTime * swayMoveSmoothAmount);
+
+			var rotationY = Mathf.Clamp(-mouseMovement.x * swayRotationAmount, -swayRotationMaxAmount, swayRotationMaxAmount);
+			var rotationX = Mathf.Clamp(-mouseMovement.y * swayRotationAmount, -swayRotationMaxAmount, swayRotationMaxAmount);
+			
+			var finalRotation = Quaternion.Euler(new Vector3(rotationX, -rotationY, 0f));
+			transform.localRotation = Quaternion.Slerp(transform.localRotation, finalRotation * _initialRotation, Time.deltaTime * swayRotationSmoothAmount);
 		}
 
 		private void HandleMovementBob()
 		{
 			if (firstPersonController.IsJumping 
 			    || !firstPersonController.IsGrounded()
-			    || !firstPersonController.IsCursorLocked()
 			)
 			{
 				return;
 			}
 
-			var movement = inputController.GetPlayerMovement();
+			var movement = InputController.GetPlayerMovement();
 			var horizontal = Mathf.Abs(movement.x);
 			var vertical = Mathf.Abs(movement.y);
 

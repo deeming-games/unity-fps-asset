@@ -24,37 +24,33 @@ namespace Player
 
 		[SerializeField] private bool lockCursor = true;
 		
-		private InputController _inputController;
 		private FirstPersonController _firstPersonController;
 
 		private float _originalPositionY;
 		private float _bobTimer;
 		
-		private bool _isCursorLocked;
-
 		private void Awake()
 		{
-			_inputController = GetComponent<InputController>();
 			_firstPersonController = GetComponent<FirstPersonController>();
 
 			_originalPositionY = viewCamera.transform.localPosition.y;
-		}
 
-		private void Start()
-		{
-			_isCursorLocked = lockCursor;
+			if (lockCursor)
+			{
+				Cursor.lockState = CursorLockMode.Locked;
+				Cursor.visible = false;
+			}
+			else
+			{
+				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;	
+			}
 		}
 
 		private void Update()
 		{
-			UpdateCursorLock();
+			var mouseDelta = InputController.GetMouseDelta();
 
-			if (!IsCursorLocked())
-			{
-				return;
-			}
-			
-			var mouseDelta = _inputController.GetMouseDelta();
 			var rotationY = mouseDelta.x * sensitivityX;
 			var rotationX = mouseDelta.y * sensitivityY;
 
@@ -124,44 +120,6 @@ namespace Player
 			{
 				_bobTimer = 0;
 				viewCamera.transform.localPosition = new Vector3(viewCamera.transform.localPosition.x, Mathf.Lerp(viewCamera.transform.localPosition.y, _originalPositionY, Time.deltaTime * speed), viewCamera.transform.localPosition.z);
-			}
-		}
-
-		private void UpdateCursorLock()
-		{
-			if (lockCursor)
-			{
-				InternalLockUpdate();
-			}
-		}
-
-		public bool IsCursorLocked()
-		{
-			return _isCursorLocked;
-		}
-		
-		private void InternalLockUpdate()
-		{
-			if (_inputController.UnlockCursor())
-			{
-				_isCursorLocked = false;
-			}
-			else if (_inputController.LockCursor())
-			{
-				_isCursorLocked = true;
-			}
-			
-			switch (_isCursorLocked)
-			{
-				case true:
-					Cursor.lockState = CursorLockMode.Locked;
-					Cursor.visible = false;
-					break;
-
-				case false:
-					Cursor.lockState = CursorLockMode.None;
-					Cursor.visible = true;
-					break;
 			}
 		}
 	}
