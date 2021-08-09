@@ -24,6 +24,11 @@ namespace Player
 			return new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
 		}
 
+		public static float GetMouseScrollValue()
+		{
+			return Input.mouseScrollDelta.y;
+		}
+
 		public static bool IsCrouchHeld()
 		{
 			return Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
