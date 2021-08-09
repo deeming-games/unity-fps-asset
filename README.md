@@ -18,3 +18,8 @@ The asset is in a pretty functional state already. But, it is far from perfect a
 
 Feel free to get stuck in and try it out and either post issues or submit pull requests. I will be fleshing out details of licensing, this readme and other documentation.
 
+## Licenses
+
+All C# code written in this repo is MIT licensed as per LICENSE-CODE.md.
+
+The 3D models, animations and sounds are by DJMaesen released under the [CC-Attribution license](https://creativecommons.org/licenses/by/4.0/) with some minor modifications made by [chrisdeeming](https://github.com/chrisdeeming). You can see [more of DJMaesen's work](https://sketchfab.com/bumstrum) over at Sketchfab.
