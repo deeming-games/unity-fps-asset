@@ -1,5 +1,6 @@
 using Decal;
 using Player;
+using UI;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -34,6 +35,8 @@ namespace Weapon
 		[SerializeField] private int bulletsPerBurst = 1;
 		[SerializeField] private bool allowButtonHold;
 		[SerializeField] private bool automaticReload = true;
+
+		[SerializeField] private bool showCrosshair = true;
 
 		private WeaponSwitcher _weaponSwitcher;
 		private Animator _animator;
@@ -204,6 +207,7 @@ namespace Weapon
 		public void DrawEventEnd()
 		{
 			_isReadyToShoot = true;
+			UIController.Instance.SetCrosshairActive(showCrosshair);
 		}
 
 		public void Holster()

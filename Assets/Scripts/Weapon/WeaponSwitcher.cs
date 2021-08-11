@@ -1,4 +1,5 @@
 using Player;
+using UI;
 using UnityEngine;
 
 namespace Weapon
@@ -105,11 +106,17 @@ namespace Weapon
 
 			var currentlySelected = transform.GetChild(_selectedWeapon);
 			var nextSelected = transform.GetChild((int)_nextWeapon);
+			var nextWeaponController = nextSelected.GetComponent<WeaponController>();
 			
 			currentlySelected.gameObject.SetActive(false);
 			
 			nextSelected.gameObject.SetActive(true);
 			nextSelected.GetComponent<WeaponController>()?.Draw();
+
+			if (!nextWeaponController)
+			{
+				UIController.Instance.SetCrosshairActive(false);
+			}
 			
 			_selectedWeapon = (int)_nextWeapon;
 
