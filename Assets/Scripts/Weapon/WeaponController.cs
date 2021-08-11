@@ -1,4 +1,4 @@
-using System;
+using Decal;
 using Player;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -8,6 +8,8 @@ namespace Weapon
 	public class WeaponController : MonoBehaviour
 	{
 		[SerializeField] private FirstPersonController firstPersonController;
+		[SerializeField] private DecalController decalController;
+		
 		[SerializeField] private Camera foregroundCamera;
 		[SerializeField] private LayerMask ignoreLayer;
 		
@@ -114,7 +116,7 @@ namespace Weapon
 
 			if (Physics.Raycast(foregroundCamera.transform.position, direction, out var rayHit, range, ~ignoreLayer))
 			{
-				Instantiate(debugBlob, rayHit.point, Quaternion.identity);
+				decalController.SpawnDecal(rayHit);
 			}
 
 			SetBulletsLeft(_bulletsLeft - 1);

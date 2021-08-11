@@ -316,10 +316,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firstPersonController: {fileID: 0}
+  decalController: {fileID: 0}
   foregroundCamera: {fileID: 0}
   ignoreLayer:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 6144
   muzzleFlash: {fileID: 6409597517235194501}
   shellEjector: {fileID: 3406291735046964221}
   shellPrefab: {fileID: 7917374542609017580, guid: 108f6b2dd8cf24d42bf363122de4515d, type: 3}
