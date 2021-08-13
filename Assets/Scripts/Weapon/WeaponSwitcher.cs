@@ -85,7 +85,7 @@ namespace Weapon
 			_nextWeapon = weaponIndex;
 
 			var currentlySelected = transform.GetChild(_selectedWeapon);
-			var currentWeaponController = currentlySelected.GetComponent<WeaponController>();
+			var currentWeaponController = currentlySelected.GetComponent<WeaponControllerBase>();
 
 			if (currentWeaponController)
 			{
@@ -106,12 +106,12 @@ namespace Weapon
 
 			var currentlySelected = transform.GetChild(_selectedWeapon);
 			var nextSelected = transform.GetChild((int)_nextWeapon);
-			var nextWeaponController = nextSelected.GetComponent<WeaponController>();
+			var nextWeaponController = nextSelected.GetComponent<WeaponControllerBase>();
 			
 			currentlySelected.gameObject.SetActive(false);
 			
 			nextSelected.gameObject.SetActive(true);
-			nextSelected.GetComponent<WeaponController>()?.Draw();
+			nextSelected.GetComponent<WeaponControllerBase>()?.Draw();
 
 			if (!nextWeaponController)
 			{

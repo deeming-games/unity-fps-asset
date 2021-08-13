@@ -1,3 +1,4 @@
+using Player;
 using UnityEngine;
 
 namespace Weapon
@@ -17,7 +18,7 @@ namespace Weapon
 		private void Start()
 		{
 			var shellCollider = GetComponent<Collider>();
-			var playerCollider = GameObject.FindWithTag("Player").GetComponent<Collider>();
+			var playerCollider = FirstPersonController.Instance.GetComponent<Collider>();
 		
 			Physics.IgnoreCollision(shellCollider, playerCollider);
 	    
@@ -25,10 +26,9 @@ namespace Weapon
 			rigidBody.useGravity = true;
 
 			var force = transform.right * Random.Range(2f, 4f);
-			force.y += Random.Range(2f, 4f);
+			force.y += Random.Range(3f, 6f);
 
 			rigidBody.AddForce(force);
-			rigidBody.AddTorque(transform.up * Random.Range(4f, 8f));
 		}
 		
 		private void OnCollisionEnter(Collision collision)

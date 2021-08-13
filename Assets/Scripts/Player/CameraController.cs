@@ -24,14 +24,14 @@ namespace Player
 
 		[SerializeField] private bool lockCursor = true;
 		
-		private FirstPersonController _firstPersonController;
+		private FirstPersonController _firstPersonInstance;
 
 		private float _originalPositionY;
 		private float _bobTimer;
 		
 		private void Awake()
 		{
-			_firstPersonController = GetComponent<FirstPersonController>();
+			_firstPersonInstance = FirstPersonController.Instance;
 
 			_originalPositionY = viewCamera.transform.localPosition.y;
 
@@ -95,17 +95,17 @@ namespace Player
 			var speed = walkBobSpeed;
 			var amount = walkBobAmount;
 
-			if (_firstPersonController.IsCrouching)
+			if (_firstPersonInstance.IsCrouching)
 			{
 				speed = crouchBobSpeed;
 				amount = crouchBobAmount;
 			}
-			else if (_firstPersonController.IsSprinting)
+			else if (_firstPersonInstance.IsSprinting)
 			{
 				speed = sprintBobSpeed;
 				amount = sprintBobAmount;
 			}
-			else if (_firstPersonController.IsJumping)
+			else if (_firstPersonInstance.IsJumping)
 			{
 				speed *= 0f;
 				amount *= 0f;

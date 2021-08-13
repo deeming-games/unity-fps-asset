@@ -7,7 +7,7 @@ namespace Player
 		[SerializeField] private float crouchHeightFactor = 0.3f;
 		[SerializeField] private float transitionSpeed = 3f;
 
-		private FirstPersonController _firstPersonController;
+		private FirstPersonController _firstPersonInstance;
 		private CharacterController _characterController;
 
 		private bool _isCrouching;
@@ -20,7 +20,7 @@ namespace Player
 
 		private void Awake()
 		{
-			_firstPersonController = GetComponent<FirstPersonController>();
+			_firstPersonInstance = FirstPersonController.Instance;
 			_characterController = GetComponent<CharacterController>();
 			
 			_standingHeight = _characterController.height;
@@ -35,7 +35,7 @@ namespace Player
 				_isCrouching = true;
 				_targetHeight = _crouchingHeight;
 
-				_firstPersonController.IsCrouching = true;
+				_firstPersonInstance.IsCrouching = true;
 			}
 			else
 			{
@@ -51,7 +51,7 @@ namespace Player
 					_canUncrouch = false;
 					_targetHeight = _standingHeight;
 					
-					_firstPersonController.IsCrouching = false;
+					_firstPersonInstance.IsCrouching = false;
 				}
 			}
 

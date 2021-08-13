@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Decal
 {
-	public class DecalController : MonoBehaviour
+	public class DecalController : SingletonMonoBehaviour<DecalController>
 	{
 		[SerializeField] private GameObject bulletHoleDecalPrefab;
 		[SerializeField] private int maxConcurrentDecals = 10;
@@ -11,7 +11,7 @@ namespace Decal
 		private Queue<GameObject> _decalsInPool;
 		private Queue<GameObject> _decalsActiveInWorld;
 		
-		private void Awake()
+		protected override void _Awake()
 		{
 			InitializeDecals();
 		}

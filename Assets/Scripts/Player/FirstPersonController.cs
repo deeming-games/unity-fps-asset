@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Player
 {
 	[RequireComponent(typeof (CharacterController), typeof (CameraController))]
-	public class FirstPersonController : MonoBehaviour
+	public class FirstPersonController : SingletonMonoBehaviour<FirstPersonController>
 	{
 		[SerializeField] private float crouchingSpeed = 1f;
 		[SerializeField] private float walkingSpeed = 3f;
@@ -21,7 +21,7 @@ namespace Player
 		public bool IsJumping { get; private set; }
 		public bool IsSprinting { get; private set; }
 
-		private void Awake()
+		protected override void _Awake()
 		{
 			_characterController = GetComponent<CharacterController>();
 			_cameraController = GetComponent<CameraController>();

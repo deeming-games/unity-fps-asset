@@ -5,8 +5,6 @@ namespace Weapon
 {
 	public class WeaponMovement : MonoBehaviour
 	{
-		[SerializeField] private FirstPersonController firstPersonController;
-
 		[SerializeField] private float swayMoveAmount = 0.1f;
 		[SerializeField] private float swayMoveMaxAmount = 0.25f;
 		[SerializeField] private float swayMoveSmoothAmount = 5f;
@@ -20,6 +18,8 @@ namespace Weapon
 		[SerializeField] private float sideBobSpeed = 0.15f;
 		[SerializeField] private float sideBobAmount = 0.04f;
 
+		private FirstPersonController _firstPersonInstance; 
+
 		private float _forwardBobAmount;
 		private float _timer;
 
@@ -30,6 +30,11 @@ namespace Weapon
 		{
 			_initialPosition = transform.localPosition;
 			_initialRotation = transform.localRotation;
+		}
+
+		private void Start()
+		{
+			_firstPersonInstance = FirstPersonController.Instance;
 		}
 
 		private void Update()
@@ -56,8 +61,8 @@ namespace Weapon
 
 		private void HandleMovementBob()
 		{
-			if (firstPersonController.IsJumping 
-			    || !firstPersonController.IsGrounded()
+			if (_firstPersonInstance.IsJumping 
+			    || !_firstPersonInstance.IsGrounded()
 			)
 			{
 				return;
@@ -87,12 +92,12 @@ namespace Weapon
 			
 			var speedFactor = 1f;
 			var amountFactor = 2f;
-			if (firstPersonController.IsCrouching)
+			if (_firstPersonInstance.IsCrouching)
 			{
 				speedFactor = 0.5f;
 				amountFactor = 0.5f;
 			}
-			else if (firstPersonController.IsSprinting)
+			else if (_firstPersonInstance.IsSprinting)
 			{
 				speedFactor = 1.5f;
 			}
