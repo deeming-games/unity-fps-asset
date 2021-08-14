@@ -20,6 +20,7 @@ namespace Weapon
 		[SerializeField] private protected LayerMask ignoreLayer;
 		
 		[SerializeField] private protected ParticleSystem muzzleFlash;
+		[SerializeField] private protected GameObject impactEffect;
 		[SerializeField] private protected GameObject shellEjector;
 		[SerializeField] private protected GameObject shellPrefab;
 
@@ -212,6 +213,12 @@ namespace Weapon
 			if (Physics.Raycast(foregroundCamera.transform.position, direction, out var rayHit, range, ~ignoreLayer))
 			{
 				DecalInstance.SpawnDecal(rayHit);
+
+				if (impactEffect)
+				{
+					var impact = Instantiate(impactEffect, rayHit.point, Quaternion.LookRotation(rayHit.normal));
+					Destroy(impact, 2f);
+				}
 			}
 		}
 

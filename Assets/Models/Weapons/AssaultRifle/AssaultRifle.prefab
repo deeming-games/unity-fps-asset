@@ -322,6 +322,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 6144
   muzzleFlash: {fileID: 8731152387205305846}
+  impactEffect: {fileID: 8979892915771361350, guid: 220d9269a38054e6984da0084043373f, type: 3}
   shellEjector: {fileID: 8682383989332439643}
   shellPrefab: {fileID: 5510299376338113002, guid: 73ac6272f04864ceb899764eee2b9f44, type: 3}
   shootAudio: {fileID: 8300000, guid: b965e6b5087b244bb87f40f4f56fbfdd, type: 3}
