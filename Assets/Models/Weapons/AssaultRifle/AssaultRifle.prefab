@@ -334,8 +334,9 @@ MonoBehaviour:
   spread: 0.05
   range: 1000
   magazineSize: 30
-  allowButtonHold: 1
-  fireRate: 10
+  fireMode: 1
+  rateOfFire: 600
+  burstSize: 1
   automaticReload: 1
   showCrosshair: 1
 --- !u!114 &9012199878362442292

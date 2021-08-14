@@ -8,6 +8,12 @@ using Random = UnityEngine.Random;
 
 namespace Weapon
 {
+	public enum WeaponFireMode {
+		SemiAuto,
+		FullAuto,
+		Burst
+	};
+
 	public class WeaponControllerBase : MonoBehaviour
 	{
 		[SerializeField] private protected Camera foregroundCamera;
@@ -28,8 +34,13 @@ namespace Weapon
 		[SerializeField] private protected float spread;
 		[SerializeField] private protected float range;
 		[SerializeField] private protected int magazineSize;
-		[SerializeField] private protected bool allowButtonHold;
-		[SerializeField] private protected float fireRate = 1f;
+		
+		[SerializeField] private protected WeaponFireMode fireMode = WeaponFireMode.SemiAuto;
+		
+		[Tooltip("Rate of fire (RPM)")]
+		[SerializeField] private protected float rateOfFire = 600f;
+		[SerializeField] private protected int burstSize = 1;
+		
 		[SerializeField] private protected bool automaticReload = true;
 
 		[SerializeField] private protected bool showCrosshair = true;
@@ -74,25 +85,29 @@ namespace Weapon
 
 		private void Update()
 		{
-			var isShootHeld = InputController.IsShootHeld();
-			var isShootPressed = InputController.IsShootPressed();
-			
-			IsShooting = allowButtonHold ? isShootHeld : isShootPressed;
-
-			if (IsReadyToShoot && IsShooting && !IsReloading && Time.time >= NextTimeToShoot)
+			if (IsReadyToShoot && !IsReloading)
 			{
-				NextTimeToShoot = Time.time + 1f / fireRate;
-				
 				if (BulletsLeft > 0)
 				{
-					HandleShoot();
-				}
-				else if (isShootPressed)
-				{
-					if (shootEmptyAudio)
+					switch (fireMode)
 					{
-						AudioSource.PlayOneShot(shootEmptyAudio);
+						case WeaponFireMode.SemiAuto:
+						case WeaponFireMode.Burst:
+							IsShooting = InputController.IsShootPressed();
+							break;
+				
+						case WeaponFireMode.FullAuto:
+							IsShooting = InputController.IsShootHeld();
+							break;
+
+						default:
+							throw new ArgumentOutOfRangeException();
 					}
+
+					if (IsShooting)
+					{
+						StartCoroutine(nameof(HandleShoot));
+					}	
 				}
 			}
 
@@ -101,18 +116,51 @@ namespace Weapon
 				HandleReload();
 			}
 
-			if (BulletsLeft == 0 && automaticReload && !IsReloading)
+			if (BulletsLeft == 0)
 			{
-				HandleReload();
+				if (InputController.IsShootPressed())
+				{
+					AudioSource.PlayOneShot(shootEmptyAudio);
+				}
+
+				if (automaticReload && !IsReloading)
+				{
+					HandleReload();
+				}
 			}
 		}
 
-		private void HandleShoot()
+		private IEnumerator HandleShoot()
 		{
-			PlayShootAnimation();
-			HandleShootEffects();
+			var thisBurstSize = burstSize; 
+
+			if (fireMode != WeaponFireMode.Burst)
+			{
+				thisBurstSize = 1;
+			}
 			
-			SetBulletsLeft(BulletsLeft - 1);
+			IsReadyToShoot = false;
+
+			for (var i = 0; i < thisBurstSize; i++)
+			{
+				PlayShootAnimation();
+				HandleShootEffects();
+				SetBulletsLeft(BulletsLeft - 1);
+
+				if (BulletsLeft == 0)
+				{
+					yield break;
+				}
+				
+				yield return new WaitForSeconds(60 / rateOfFire);
+			}
+			
+			if (fireMode == WeaponFireMode.Burst)
+			{
+				yield return new WaitForSeconds(60 / rateOfFire * thisBurstSize - 1);
+			}
+
+			IsReadyToShoot = true;
 		}
 
 		private protected virtual void PlayShootAnimation()

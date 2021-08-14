@@ -8773,6 +8773,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4697996223666924512, guid: 09c2cf5dc2a12410583452d7a50f1126, type: 3}
+      propertyPath: fireRate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697996223666924512, guid: 09c2cf5dc2a12410583452d7a50f1126, type: 3}
       propertyPath: decalController
       value: 
       objectReference: {fileID: 0}
@@ -9109,6 +9113,10 @@ PrefabInstance:
     - target: {fileID: 4762187745574538879, guid: 501c02626449b4a0f893963e9ec3ff19, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 4.7674956
+      objectReference: {fileID: 0}
+    - target: {fileID: 4770232492922096196, guid: 501c02626449b4a0f893963e9ec3ff19, type: 3}
+      propertyPath: fireRate
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 4770232492922096196, guid: 501c02626449b4a0f893963e9ec3ff19, type: 3}
       propertyPath: bulletsPerBurst
