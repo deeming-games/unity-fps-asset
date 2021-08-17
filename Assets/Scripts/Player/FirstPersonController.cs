@@ -84,5 +84,10 @@ namespace Player
 		{
 			return _characterController.isGrounded;
 		}
+
+		public Vector3 GetCharacterVelocity()
+		{
+			return _characterController.velocity;
+		}
 	}
 }

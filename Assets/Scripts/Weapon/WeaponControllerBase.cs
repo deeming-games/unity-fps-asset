@@ -41,6 +41,9 @@ namespace Weapon
 		[Tooltip("Rate of fire (RPM)")]
 		[SerializeField] private protected float rateOfFire = 600f;
 		[SerializeField] private protected int burstSize = 1;
+
+		[SerializeField] private protected float shellEjectVelocity = 10f;
+		[SerializeField] private protected float shellEjectSpin = 2f;
 		
 		[SerializeField] private protected bool automaticReload = true;
 
@@ -57,7 +60,6 @@ namespace Weapon
 		private protected bool IsShooting;
 		private protected bool IsReloading;
 		private protected bool IsReadyToShoot;
-		private protected float NextTimeToShoot;
 
 		private void Awake()
 		{
@@ -198,17 +200,7 @@ namespace Weapon
 				muzzleFlash.Play();
 			}
 
-			if (shellPrefab)
-			{
-				var shell = Instantiate(shellPrefab, shellEjector.transform.position, Quaternion.FromToRotation(Vector3.right, transform.right));
-
-				var euler = shell.transform.eulerAngles;
-				euler.x += 90f;
-
-				shell.transform.eulerAngles = euler;
-
-				Destroy(shell, 5f);
-			}
+			HandleShellEjection();
 			
 			if (Physics.Raycast(foregroundCamera.transform.position, direction, out var rayHit, range, ~ignoreLayer))
 			{
@@ -220,6 +212,53 @@ namespace Weapon
 					Destroy(impact, 2f);
 				}
 			}
+		}
+
+		private void HandleShellEjection()
+		{
+			if (!shellPrefab)
+			{
+				return;
+			}
+			
+			var shell = Instantiate(
+				shellPrefab, 
+				shellEjector.transform.position, 
+				shellEjector.transform.rotation
+			);
+			
+			var shellCollider = shell.GetComponent<Collider>();
+			var playerCollider = FirstPersonInstance.GetComponent<Collider>();
+		
+			Physics.IgnoreCollision(shellCollider, playerCollider);
+
+			var shellRigidbody = shell.GetComponent<Rigidbody>();
+			shellRigidbody.useGravity = true;
+
+			// orients the shell casing correctly relative to the vertical rotation of the camera
+			var euler = shell.transform.eulerAngles;
+			euler.x += 90f;
+
+			shell.transform.eulerAngles = euler;
+
+			var force = shellEjector.transform.right.normalized * shellEjectVelocity;
+			force.y += shellEjectVelocity * Random.Range(0.75f, 1f);
+
+			shellRigidbody.AddForce(force, ForceMode.Impulse);
+
+			var velocityForce = FirstPersonInstance.GetCharacterVelocity();
+			shellRigidbody.AddForce(velocityForce, ForceMode.VelocityChange);
+
+			if (Random.value > 0.5f)
+			{
+				shellRigidbody.AddRelativeTorque(-Random.rotation.eulerAngles * shellEjectSpin);
+			}
+			else
+			{
+				shellRigidbody.AddRelativeTorque(Random.rotation.eulerAngles * shellEjectSpin);
+			}
+
+			Destroy(shell, 3f);
 		}
 
 		private void HandleReload()

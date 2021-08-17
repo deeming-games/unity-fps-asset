@@ -336,6 +336,8 @@ MonoBehaviour:
   fireMode: 0
   rateOfFire: 400
   burstSize: 1
+  shellEjectVelocity: 0.05
+  shellEjectSpin: 1.1
   automaticReload: 1
   showCrosshair: 1
 --- !u!114 &6295792386063505590
